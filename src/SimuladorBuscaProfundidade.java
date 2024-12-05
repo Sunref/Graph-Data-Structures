@@ -1,7 +1,5 @@
-package projetoesdgrafos;
-
-import projetoesdgrafos.utils.Utils;
-import projetoesdgrafos.grafo.Grafo;
+import utils.Utils;
+import grafo.Grafo;
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 
 /**

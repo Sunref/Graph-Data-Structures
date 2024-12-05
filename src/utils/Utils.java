@@ -1,8 +1,7 @@
-package projetoesdgrafos.utils;
-
+package utils;
 import br.com.davidbuzatto.jsge.math.Vector2;
-import projetoesdgrafos.grafo.Vertice;
-import projetoesdgrafos.grafo.Grafo;
+import grafo.Vertice;
+import grafo.Grafo;
 import java.util.Map;
 import java.util.TreeMap;
 

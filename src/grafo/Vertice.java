@@ -1,4 +1,4 @@
-package projetoesdgrafos.grafo;
+package grafo;
 
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import br.com.davidbuzatto.jsge.math.Vector2;
