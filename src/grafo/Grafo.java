@@ -2,8 +2,11 @@ package grafo;
 
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 
 /**
@@ -12,77 +15,104 @@ import java.util.TreeMap;
  * @author Prof. Dr. David Buzatto
  */
 public class Grafo {
-    
-    public Map<Vertice, List<Aresta>> st;
-    public Map<Integer, Vertice> vertices;
-    
-    public Grafo() {
-        st = new TreeMap<>();
-        vertices = new TreeMap<>();
+
+  public Map<Vertice, List<Aresta>> st;
+  public Map<Integer, Vertice> vertices;
+
+  public Grafo() {
+    st = new TreeMap<>();
+    vertices = new TreeMap<>();
+  }
+
+  public Vertice addVertice(double x, double y) {
+    Vertice v = new Vertice(vertices.size(), x, y);
+    vertices.put(v.id, v);
+    return v;
+  }
+
+  public void addAresta(int origem, int destino) {
+    Vertice vo = vertices.get(origem);
+    Vertice vd = vertices.get(destino);
+    if (!st.containsKey(vo)) {
+      st.put(vo, new ArrayList<>());
     }
-    
-    public Vertice addVertice( double x, double y ) {
-        Vertice v = new Vertice( vertices.size(), x, y );
-        vertices.put( v.id, v );
-        return v;
+    if (!st.containsKey(vd)) {
+      st.put(vd, new ArrayList<>());
     }
-    
-    public void addAresta( int origem, int destino ) {
-        Vertice vo = vertices.get( origem );
-        Vertice vd = vertices.get( destino );
-        if ( !st.containsKey( vo ) ) {
-            st.put( vo, new ArrayList<>() );
-        }
-        if ( !st.containsKey( vd ) ) {
-            st.put( vd, new ArrayList<>() );
-        }
-        st.get( vo ).add( 0, new Aresta( vo, vd ) );
-        st.get( vd ).add( 0, new Aresta( vd, vo ) );
-    }
-    
-    public List<Aresta> adjacentes( int origem ) {
-        return st.getOrDefault( vertices.get( origem ), new ArrayList<>() );
+    st.get(vo).add(0, new Aresta(vo, vd));
+    st.get(vd).add(0, new Aresta(vd, vo));
+  }
+
+  public List<Aresta> adjacentes(int origem) {
+    return st.getOrDefault(vertices.get(origem), new ArrayList<>());
+  }
+
+  public int getQuantidadeVertices() {
+    return vertices.size();
+  }
+
+  public void draw(EngineFrame e) {
+
+    for (Map.Entry<Vertice, List<Aresta>> entry : st.entrySet()) {
+      for (Aresta a : entry.getValue()) {
+        a.draw(e);
+      }
     }
 
-    public int getQuantidadeVertices() {
-        return vertices.size();
+    for (Map.Entry<Integer, Vertice> entry : vertices.entrySet()) {
+      entry.getValue().draw(e);
     }
-    
-    public void draw( EngineFrame e ) {
-        
-        for ( Map.Entry<Vertice, List<Aresta>> entry : st.entrySet() ) {
-            for ( Aresta a : entry.getValue() ) {
-                a.draw( e );
-            }
+
+  }
+
+  @Override
+  public String toString() {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (Map.Entry<Vertice, List<Aresta>> entry : st.entrySet()) {
+      sb.append(entry.getKey()).append(" -> ");
+      boolean primeiro = true;
+      for (Aresta a : entry.getValue()) {
+        if (primeiro) {
+          primeiro = false;
+        } else {
+          sb.append(", ");
         }
-        
-        for ( Map.Entry<Integer, Vertice> entry : vertices.entrySet() ) {
-            entry.getValue().draw( e );
-        }
-        
+        sb.append(a.destino.id);
+      }
+      sb.append("\n");
     }
-    
-    @Override
-    public String toString() {
-        
-        StringBuilder sb = new StringBuilder();
-        
-        for ( Map.Entry<Vertice, List<Aresta>> entry : st.entrySet() ) {
-            sb.append( entry.getKey() ).append( " -> " );
-            boolean primeiro = true;
-            for ( Aresta a : entry.getValue() ) {
-                if ( primeiro ) {
-                    primeiro = false;
-                } else {
-                    sb.append( ", " );
-                }
-                sb.append( a.destino.id );
-            }
-            sb.append( "\n" );
+
+    return sb.toString().trim();
+
+  }
+
+  public List<Integer> dfs(int origem) {
+    List<Integer> resultado = new ArrayList<>();
+    Set<Integer> visitados = new HashSet<>();
+    Stack<Integer> pilha = new Stack<>();
+
+    pilha.push(origem);
+
+    while (!pilha.isEmpty()) {
+      int atual = pilha.pop();
+
+      if (!visitados.contains(atual)) {
+        visitados.add(atual);
+        resultado.add(atual);
+
+        // Adiciona os vizinhos na pilha (ordem inversa para manter a lógica de DFS)
+        for (Aresta aresta : adjacentes(atual)) {
+          int vizinho = aresta.destino.id;
+          if (!visitados.contains(vizinho)) {
+            pilha.push(vizinho);
+          }
         }
-        
-        return sb.toString().trim();
-        
+      }
     }
-    
+
+    return resultado;
+  }
+
 }
