@@ -1,4 +1,4 @@
-import java.util.Map;
+import java.util.List;
 import java.util.Map.Entry;
 
 import br.com.davidbuzatto.jsge.collision.CollisionUtils;
@@ -6,6 +6,7 @@ import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import br.com.davidbuzatto.jsge.math.Vector2;
 import grafo.Grafo;
 import grafo.Vertice;
+import grafo.Aresta;
 import utils.Utils;
 
 /**
@@ -28,6 +29,8 @@ public class SimuladorBuscaLargura extends EngineFrame {
     setDefaultFontSize(20);
     setDefaultStrokeLineWidth(2);
     setDefaultStrokeEndCap(STROKE_CAP_ROUND);
+    // TODO Usar essa lista para desenhas as setas
+    List<Aresta> arvoreResultante;
   }
 
   @Override
@@ -39,7 +42,7 @@ public class SimuladorBuscaLargura extends EngineFrame {
       for (Entry<Integer, Vertice> entry : grafo.vertices.entrySet()) {
         if (CollisionUtils.checkCollisionPointCircle(mousePos, entry.getValue().pos, 30)) {
           System.out.println(entry.getValue().id);
-          // Chamar BFS
+          grafo.bfs(entry.getValue());
         }
       }
     }
@@ -48,7 +51,7 @@ public class SimuladorBuscaLargura extends EngineFrame {
       for (Entry<Integer, Vertice> entry : grafo.vertices.entrySet()) {
         if (CollisionUtils.checkCollisionPointCircle(mousePos, entry.getValue().pos, 30)) {
           System.out.println(entry.getValue().id);
-          // Chamar DFS
+          grafo.dfs(entry.getValue());
         }
       }
     }

@@ -3,8 +3,10 @@ package grafo;
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -88,31 +90,56 @@ public class Grafo {
 
   }
 
-  public List<Integer> dfs(int origem) {
-    List<Integer> resultado = new ArrayList<>();
-    Set<Integer> visitados = new HashSet<>();
-    Stack<Integer> pilha = new Stack<>();
+  // INFO A lista retornada pode ser usada para desenhar as setas da arvore resultante,
+  // pois cada aresta armazena seu destinho e origem
+  public List<Aresta> DFS(Vertice origem) {
 
-    pilha.push(origem);
+    Set<Vertice> visitados = new HashSet<>();
+    List<Aresta> edgeList = new ArrayList<>();
+    Stack<Vertice> stack = new Stack<>();
 
-    while (!pilha.isEmpty()) {
-      int atual = pilha.pop();
+    stack.push(origem);
+
+    while (!stack.isEmpty()) {
+      Vertice atual = stack.pop();
 
       if (!visitados.contains(atual)) {
         visitados.add(atual);
-        resultado.add(atual);
 
-        // Adiciona os vizinhos na pilha (ordem inversa para manter a lógica de DFS)
-        for (Aresta aresta : adjacentes(atual)) {
-          int vizinho = aresta.destino.id;
-          if (!visitados.contains(vizinho)) {
-            pilha.push(vizinho);
+        for (Aresta aresta : st.getOrDefault(atual, new ArrayList<>())) {
+          if (!visitados.contains(aresta.destino)) {
+            edgeList.add(aresta);
+            stack.push(aresta.destino);
           }
         }
       }
     }
 
-    return resultado;
+    return edgeList;
   }
 
+  public List<Aresta> BFS(Vertice origem) {
+
+    Set<Vertice> visitados = new HashSet<>();
+    List<Aresta> edgeList = new ArrayList<>();
+    Queue<Vertice> fila = new LinkedList<>();
+    fila.add(origem);
+
+    while (!fila.isEmpty()) {
+      Vertice atual = fila.poll();
+
+      if (!visitados.contains(atual)) {
+        visitados.add(atual);
+
+        for (Aresta aresta : st.getOrDefault(atual, new ArrayList<>())) {
+          if (!visitados.contains(aresta.destino)) {
+            edgeList.add(aresta);
+            fila.add(aresta.destino);
+          }
+        }
+      }
+    }
+
+    return edgeList;
+  }
 }
