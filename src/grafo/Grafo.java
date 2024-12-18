@@ -106,11 +106,17 @@ public class Grafo {
       if (!visitados.contains(atual)) {
         visitados.add(atual);
 
-        for (Aresta aresta : st.getOrDefault(atual, new ArrayList<>())) {
-          if (!visitados.contains(aresta.destino)) {
-            edgeList.add(aresta);
-            stack.push(aresta.destino);
-          }
+        for (Aresta aresta : st.get(atual)) {
+           if (!visitados.contains(aresta.destino)) {
+                if (!edgeList.contains(aresta)) {
+                    edgeList.add(aresta);
+                }
+                
+                if (!stack.contains(aresta.destino)) {
+                    stack.push(aresta.destino);
+                }
+                
+            }
         }
       }
     }
@@ -131,11 +137,16 @@ public class Grafo {
       if (!visitados.contains(atual)) {
         visitados.add(atual);
 
-        for (Aresta aresta : st.getOrDefault(atual, new ArrayList<>())) {
+        for (Aresta aresta : st.get(atual)) {
           if (!visitados.contains(aresta.destino)) {
-            edgeList.add(aresta);
-            fila.add(aresta.destino);
-          }
+                if (!edgeList.contains(aresta)) {
+                    edgeList.add(aresta);
+                }
+                
+                if (!fila.contains(aresta.destino)) {
+                    fila.add(aresta.destino);
+                }
+            }
         }
       }
     }
